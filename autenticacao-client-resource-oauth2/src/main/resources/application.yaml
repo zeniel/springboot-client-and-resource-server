@@ -1,0 +1,49 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /cliente-resource
+
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://192.168.15.31:5432/autorizacao-oauth2
+    username: postgres
+    password: admin123
+    driverClassName: org.postgresql.Driver
+  security:
+    oauth2:
+      client:
+        registration:
+          custom:
+            client-id: demo-autorizacao
+            client-secret: y4f5Ax3H2Wqq7J2sphoF2ExZk21yewRp
+            scope:
+              - openid
+              - email
+              - profile
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8081/cliente-resource/login/oauth2/code/custom
+        provider:
+          custom:
+### ver no exemplo dos samples do spring-authorization-server no eclipse da maquina AGROTEC
+            issuer-uri: http://192.168.15.31:9090/auth/realms/master
+#            authorization-uri: http://192.168.15.31:9090/auth/realms/master/protocol/openid-connect/auth
+#            token-uri: http://192.168.15.31:9090/auth/realms/master/protocol/openid-connect/token
+#            user-info-uri: http://192.168.15.31:9090/auth/realms/master/protocol/openid-connect/userinfo
+            user-name-attribute: preferred_username
+      resourceserver:
+        jwt:
+#          # isuser-uri - permite que se indique a URL do Authorization Server a qual este servico devera 
+#          #              recuperar as demais informacoes, no entanto, isso forca que o Authorization Server
+#          #               esteja disponivel durante a inicializacao deste servico
+          issuer-uri: http://192.168.15.31:9090/auth/realms/master
+          jwk-set-uri: http://192.168.15.31:9090/auth/realms/master/protocol/openid-connect/certs
